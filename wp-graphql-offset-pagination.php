@@ -212,7 +212,7 @@ class OffsetPagination {
                 $query_args['offset'] = 0;
             }
 
-            $query_args['number'] = $query_args['number'] + 1;
+            $query_args['number'] = $query_args['posts_per_page'] = $query_args['number'] + 1;
 
         }
 
@@ -244,7 +244,7 @@ class OffsetPagination {
          * We must use $resolver->get_items() rather than $nodes as $nodes has already
          * been sliced by the AbstractConnectionResolver
          */
-        return array_slice( $resolver->get_items(), 0, $resolver->get_query_args()['posts_per_page'] );
+        return array_slice( $resolver->get_items(), 0, $resolver->get_query_args()['posts_per_page'] - 1 );
     }
 
     /**
@@ -291,14 +291,17 @@ class OffsetPagination {
             $query_args = $resolver->get_query_args();
             $items      = $resolver->get_items();
 
+            // The number of pages the user actually requested.
+            $requested_pages = $query_args['posts_per_page'] - 1;
+
             // If we're requesting any offset, then there must be a prev page.
             $page_info['hasPreviousPage'] = $query_args['offset'] > 0 ? true : false;
 
             // If we've retrieved more items that we requested (because of the +1) there must be a next page.
-            $page_info['hasNextPage'] = count( $items ) > $query_args['posts_per_page'] ? true : false;
+            $page_info['hasNextPage'] = count( $items ) > $requested_pages ? true : false;
 
             // Get the current page that we're on. (Need to +1 otherwise page 1 would show as 0)
-            $current_page = $query_args['offset'] / $query_args['posts_per_page'] + 1;
+            $current_page = $query_args['offset'] / $requested_pages + 1;
 
             // If we have a next page, add it to pageInfo.
             $page_info['nextPage']     = $page_info['hasNextPage'] ? $current_page + 1 : null;
@@ -313,11 +316,11 @@ class OffsetPagination {
              */
             if ( $resolver->get_query() instanceof \WP_Query ) {
                 if ( isset( $resolver->get_query()->found_posts ) ) {
-                    $page_info['totalPages'] = ceil( intval( $resolver->get_query()->found_posts ) / $query_args['posts_per_page'] );
+                    $page_info['totalPages'] = ceil( intval( $resolver->get_query()->found_posts ) / $requested_pages );
                 }
             } elseif ( $resolver->get_query() instanceof \WP_User_Query ) {
                 if ( isset( $resolver->get_query()->total_users ) ) {
-                    $page_info['totalPages'] = ceil( intval( $resolver->get_query()->total_users ) / $query_args['posts_per_page'] );
+                    $page_info['totalPages'] = ceil( intval( $resolver->get_query()->total_users ) / $requested_pages );
                 }
             }
 
