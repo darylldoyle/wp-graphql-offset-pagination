@@ -1,0 +1,17 @@
+{
+  "name": "enshrined/wp-graphql-offset-pagination",
+  "description": "Offset Pagination support for the WPGraphQL plugin.",
+  "type": "wordpress-plugin",
+  "license": "GPLv2",
+  "authors": [
+    {
+      "name": "Daryll Doyle",
+      "email": "daryll@enshrined.co.uk"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Enshrined\\OffsetPagination\\": "src"
+    }
+  }
+}
