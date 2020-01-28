@@ -2,6 +2,16 @@
 
 This is an extension for the [WPGraphQL](https://github.com/wp-graphql/wp-graphql) plugin for WordPress. It adds basic offset pagination as opposed to the standard [Cursor based pagination](https://docs.wpgraphql.com/getting-started/posts/#pagination) that ships with WPGraphQL.
 
+___
+
+## NOTICE
+
+This package has not been tested with WPGraphQL version `0.4.0` or above. 
+
+As such, if you're using a newwer version of WPGraphQL (and you should be) please give the following plugin a try. It's supposed to do the same thing, but has tests and is well supported!
+
+[valu-digital/wp-graphql-offset-pagination](https://github.com/valu-digital/wp-graphql-offset-pagination)
+___
 
 
 ## Installation
